@@ -270,6 +270,16 @@ class PHPExcel_Cell
 //echo 'Cell '.$this->getCoordinate().' value is a '.$this->dataType.' with a value of '.$this->getValue().PHP_EOL;
         if ($this->dataType == PHPExcel_Cell_DataType::TYPE_FORMULA) {
             try {
+                
+                if (preg_match('/!([A-Z,a-z]+):([A-Z,a-z]+),/', $this->getValue(), $matches)) {
+                    $replace = $matches[0];
+
+                    $formula = str_replace($replace, '!' . "\${$matches[1]}\$:\${$matches[2]}\$40" . ',', $this->getValue());
+
+                    $this->setValue($formula);
+
+                }
+                
 //echo 'Cell value for '.$this->getCoordinate().' is a formula: Calculating value'.PHP_EOL;
                 $result = PHPExcel_Calculation::getInstance(
                     $this->getWorksheet()->getParent()
