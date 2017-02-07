@@ -724,11 +724,15 @@ class PHPExcel_Calculation_LookupRef
         $rowNumber = $rowValue = false;
         foreach ($lookup_array as $rowKey => $rowData) {
             if ((is_numeric($lookup_value) && is_numeric($rowData[$firstColumn]) && ($rowData[$firstColumn] > $lookup_value)) ||
-                (!is_numeric($lookup_value) && !is_numeric($rowData[$firstColumn]) && (strtolower($rowData[$firstColumn]) > strtolower($lookup_value)))) {
-                break;
+                (!is_numeric($lookup_value) && !is_numeric($rowData[$firstColumn]) && (strtolower($rowData[$firstColumn]) > strtolower($lookup_value))) ||
+                (strtolower($rowData[$firstColumn]) !== strtolower($lookup_value))
+            ) {
+                continue;
             }
             $rowNumber = $rowKey;
             $rowValue = $rowData[$firstColumn];
+            break;
+
         }
 
         if ($rowNumber !== false) {
